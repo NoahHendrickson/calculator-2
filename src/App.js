@@ -16,7 +16,7 @@ function reducer(state, { type, payload }) {
     case ACTIONS.ADD_DIGIT:
       return {
         ...state,
-        currentNumber: `${currentNumber || ""}${payload.value}`,
+        currentNumber: `${state.currentNumber || ""}${payload.digit}`,
       };
   }
 }
@@ -29,32 +29,34 @@ function App() {
 
   return (
     <div className="calculator">
-      <div className="currentNumber">{currentNumber}</div>
-      <div className="previousNumber">
-        {previousNumber}
-        {operation}
+      <div className="display">
+        <div className="currentNumber">{currentNumber}</div>
+        <div className="previousNumber">
+          {previousNumber}
+          {operation}
+        </div>
       </div>
       <div className="calcGrid">
-        <button className="spanTwo" value="AC">
+        <button className="spanTwo" operation="AC">
           AC
         </button>
-        <OperationButton value="Del" />
-        <OperationButton value="-" />
-        <NumberButton value="1" dispatch={dispatch} />
-        <NumberButton value="2" />
-        <NumberButton value="3" />
-        <OperationButton value="+" />
-        <NumberButton value="4" />
-        <NumberButton value="5" />
-        <NumberButton value="6" />
-        <OperationButton value="/" />
-        <NumberButton value="7" />
-        <NumberButton value="8" />
-        <NumberButton value="9" />
-        <OperationButton value="x" />
-        <NumberButton value="0" />
-        <NumberButton value="." />
-        <button className="spanTwo" value="=">
+        <OperationButton operation="Del" />
+        <OperationButton operation="-" />
+        <NumberButton digit="1" dispatch={dispatch} />
+        <NumberButton digit="2" dispatch={dispatch} />
+        <NumberButton digit="3" dispatch={dispatch} />
+        <OperationButton operation="+" />
+        <NumberButton digit="4" dispatch={dispatch} />
+        <NumberButton digit="5" dispatch={dispatch} />
+        <NumberButton digit="6" dispatch={dispatch} />
+        <OperationButton operation="/" />
+        <NumberButton digit="7" dispatch={dispatch} />
+        <NumberButton digit="8" dispatch={dispatch} />
+        <NumberButton digit="9" dispatch={dispatch} />
+        <OperationButton operation="x" />
+        <NumberButton digit="0" dispatch={dispatch} />
+        <NumberButton digit="." dispatch={dispatch} />
+        <button className="spanTwo" operation="=">
           =
         </button>
       </div>

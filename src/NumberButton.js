@@ -1,13 +1,11 @@
-import ACTIONS from "./App.js";
+import { ACTIONS } from "./App.js";
 
-function NumberButton({ dispatch, value }) {
+export default function NumberButton({ dispatch, digit }) {
   return (
     <button
-      onClick={() => dispatch({ type: ACTIONS.ADD_DIGIT, payload: { value } })}
+      onClick={() => dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit } })}
     >
-      {value}
+      {digit}
     </button>
   );
 }
-
-export default NumberButton;
