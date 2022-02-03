@@ -1,4 +1,3 @@
-import React from "react";
 import ACTIONS from "./App.js";
 
 function NumberButton({ dispatch, value }) {
