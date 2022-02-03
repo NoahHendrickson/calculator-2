@@ -14,9 +14,27 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      if (payload.digit === "0" && state.currentNumber === "0") {
+        return state;
+      }
+      if (payload.digit === "." && state.currentNumber.includes(".")) {
+        return state;
+      }
       return {
         ...state,
         currentNumber: `${state.currentNumber || ""}${payload.digit}`,
+      };
+    case ACTIONS.CLEAR_ALL:
+      return {};
+    case ACTIONS.CHOOSE_OPERATION:
+      return {
+        ...state,
+        previousNumber: `${state.currentNumber} ${payload.operation}`,
+        currentNumber: null,
+      };
+    case ACTIONS.EVALUATE:
+      return {
+        currentNumber: state.previousNumber - state.currentNumber,
       };
   }
 }
@@ -37,26 +55,35 @@ function App() {
         </div>
       </div>
       <div className="calcGrid">
-        <button className="spanTwo" operation="AC">
+        <button
+          onClick={() => dispatch({ type: ACTIONS.CLEAR_ALL })}
+          className="spanTwo"
+          operation="AC"
+          dispatch
+        >
           AC
         </button>
-        <OperationButton operation="Del" />
-        <OperationButton operation="-" />
+        <OperationButton operation="Del" dispatch={dispatch} />
+        <OperationButton operation="-" dispatch={dispatch} />
         <NumberButton digit="1" dispatch={dispatch} />
         <NumberButton digit="2" dispatch={dispatch} />
         <NumberButton digit="3" dispatch={dispatch} />
-        <OperationButton operation="+" />
+        <OperationButton operation="*" dispatch={dispatch} />
         <NumberButton digit="4" dispatch={dispatch} />
         <NumberButton digit="5" dispatch={dispatch} />
         <NumberButton digit="6" dispatch={dispatch} />
-        <OperationButton operation="/" />
+        <OperationButton operation="÷" dispatch={dispatch} />
         <NumberButton digit="7" dispatch={dispatch} />
         <NumberButton digit="8" dispatch={dispatch} />
         <NumberButton digit="9" dispatch={dispatch} />
-        <OperationButton operation="x" />
+        <OperationButton operation="x" dispatch={dispatch} />
         <NumberButton digit="0" dispatch={dispatch} />
         <NumberButton digit="." dispatch={dispatch} />
-        <button className="spanTwo" operation="=">
+        <button
+          className="spanTwo"
+          operation="="
+          onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
+        >
           =
         </button>
       </div>
