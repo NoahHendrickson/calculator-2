@@ -44,7 +44,8 @@ function reducer(state, { type, payload }) {
         };
       }
       return {
-        currentNumber: evaluate(state),
+        previousNumber: evaluate(state),
+        operation: payload.operation,
       };
       return {};
     case ACTIONS.EVALUATE:
