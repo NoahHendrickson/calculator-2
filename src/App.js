@@ -17,6 +17,11 @@ function reducer(state, { type, payload }) {
       if (payload.digit === "0" && state.currentNumber === "0") {
         return state;
       }
+      if (payload.digit === "." && state.currentNumber == null) {
+        return {
+          currentNumber: payload.digit,
+        };
+      }
       if (payload.digit === "." && state.currentNumber.includes(".")) {
         return state;
       }
@@ -27,16 +32,58 @@ function reducer(state, { type, payload }) {
     case ACTIONS.CLEAR_ALL:
       return {};
     case ACTIONS.CHOOSE_OPERATION:
+      if (state.currentNumber == null && state.previousNumber == null) {
+        return state;
+      }
+      if (state.previousNumber == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousNumber: state.currentNumber,
+          currentNumber: null,
+        };
+      }
+      return {
+        currentNumber: evaluate(state),
+      };
+      return {};
+    case ACTIONS.EVALUATE:
+      if (state.currentNumber == null && state.previousNumber == null) {
+        return state;
+      }
       return {
         ...state,
-        previousNumber: `${state.currentNumber} ${payload.operation}`,
-        currentNumber: null,
+        currentNumber: evaluate(state),
+        previousNumber: null,
+        operation: null,
       };
-    case ACTIONS.EVALUATE:
+    case ACTIONS.DEL_DIGIT:
       return {
-        currentNumber: state.previousNumber - state.currentNumber,
+        ...state,
+        currentNumber: state.currentNumber.slice(0, -1),
       };
   }
+}
+
+function evaluate({ currentNumber, previousNumber, operation }) {
+  const prev = parseFloat(previousNumber);
+  const current = parseFloat(currentNumber);
+  let answer;
+  switch (operation) {
+    case "-":
+      answer = prev - current;
+      break;
+    case "+":
+      answer = prev + current;
+      break;
+    case "*":
+      answer = prev * current;
+      break;
+    case "÷":
+      answer = prev / current;
+      break;
+  }
+  return answer.toString();
 }
 
 function App() {
@@ -59,16 +106,20 @@ function App() {
           onClick={() => dispatch({ type: ACTIONS.CLEAR_ALL })}
           className="spanTwo"
           operation="AC"
-          dispatch
         >
           AC
         </button>
-        <OperationButton operation="Del" dispatch={dispatch} />
+        <button
+          onClick={() => dispatch({ type: ACTIONS.DEL_DIGIT })}
+          operation="DEL"
+        >
+          DEL
+        </button>
         <OperationButton operation="-" dispatch={dispatch} />
         <NumberButton digit="1" dispatch={dispatch} />
         <NumberButton digit="2" dispatch={dispatch} />
         <NumberButton digit="3" dispatch={dispatch} />
-        <OperationButton operation="*" dispatch={dispatch} />
+        <OperationButton operation="+" dispatch={dispatch} />
         <NumberButton digit="4" dispatch={dispatch} />
         <NumberButton digit="5" dispatch={dispatch} />
         <NumberButton digit="6" dispatch={dispatch} />
@@ -76,7 +127,7 @@ function App() {
         <NumberButton digit="7" dispatch={dispatch} />
         <NumberButton digit="8" dispatch={dispatch} />
         <NumberButton digit="9" dispatch={dispatch} />
-        <OperationButton operation="x" dispatch={dispatch} />
+        <OperationButton operation="*" dispatch={dispatch} />
         <NumberButton digit="0" dispatch={dispatch} />
         <NumberButton digit="." dispatch={dispatch} />
         <button
